@@ -3,20 +3,41 @@ var budgeController = (function() {
 })();
 
 var UIController = (function() {
+    var DOMstrings = {
+          inputType: '.add__type',
+          addDescription: '.add__description',
+          addValue: '.add__value',
+          inputAddButton: '.add__btn'
+    }
 
+  return {
+      getinput: function() {
+          return {
+             type: document.querySelector(DOMstrings.inputType).value, // will be either inc or exp
+             description: document.querySelector(DOMstrings.addDescription).value,
+             value: document.querySelector(DOMstrings.addValue).value
+            }
+      },
+
+      getDOMstrings: function() {
+          return DOMstrings;
+      }
+  }
 })();
 
 var controller = (function(budgetCtrl, UICtrl) {
+    var DOM = UICtrl.getDOMstrings();
 
     var ctrlAddItem = function() {
-
+        var input = UICtrl.getinput();
+        console.log(input);
     };
 
-   document.querySelector('.add__btn').addEventListener('click', ctrlAddItem);
+   document.querySelector(DOM.inputAddButton).addEventListener('click', ctrlAddItem);
 
    document.addEventListener('keypress', function(event) {
        if (event.keyCode === 13 || event.which === 13) {
-
+           ctrlAddItem();
        }
    });
 })(budgeController, UIController);
