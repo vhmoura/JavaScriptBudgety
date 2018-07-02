@@ -1,5 +1,26 @@
 var budgeController = (function() {
-   
+   var Expense = function(id, description, value){
+      this.id = id;
+      this.description = description;
+      this.value = value;
+    };
+
+   var Income = function(id, description, value){
+    this.id = id;
+    this.description = description;
+    this.value = value;
+};
+
+   var data = {
+       allItems: {
+           exp: [],
+           inc: []
+       },
+       totals: {
+           exp: 0,
+           inc: 0
+       }
+   }
 })();
 
 var UIController = (function() {
@@ -26,18 +47,31 @@ var UIController = (function() {
 })();
 
 var controller = (function(budgetCtrl, UICtrl) {
-    var DOM = UICtrl.getDOMstrings();
+    
+    var setupEventListners = function() {        
+        var DOM = UICtrl.getDOMstrings();
+
+        document.querySelector(DOM.inputAddButton).addEventListener('click', ctrlAddItem);
+
+        document.addEventListener('keypress', function(event) {
+            if (event.keyCode === 13 || event.which === 13) {
+                ctrlAddItem();
+            }
+        });    
+    };
 
     var ctrlAddItem = function() {
         var input = UICtrl.getinput();
-        console.log(input);
+       
     };
 
-   document.querySelector(DOM.inputAddButton).addEventListener('click', ctrlAddItem);
+    return {
+        init: function() {
+            console.log('application has started');
+            setupEventListners();
+        }
+    };
 
-   document.addEventListener('keypress', function(event) {
-       if (event.keyCode === 13 || event.which === 13) {
-           ctrlAddItem();
-       }
-   });
 })(budgeController, UIController);
+
+controller.init();
