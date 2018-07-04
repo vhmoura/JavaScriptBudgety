@@ -53,7 +53,9 @@ var UIController = (function() {
           inputType: '.add__type',
           addDescription: '.add__description',
           addValue: '.add__value',
-          inputAddButton: '.add__btn'
+          inputAddButton: '.add__btn',
+          incomeContainer: '.income__list',
+          expenseContainer: '.expenses__list'
     }
 
   return {
@@ -63,6 +65,28 @@ var UIController = (function() {
              description: document.querySelector(DOMstrings.addDescription).value,
              value: document.querySelector(DOMstrings.addValue).value
             }
+      },
+
+      addListItem: function(obj, type) {
+          // create html string with placeholder text
+          var html, newHtml, container;
+            html = '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+            container = DOMstrings.incomeContainer;
+
+            if (type==='exp')
+            {
+              html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+              container = DOMstrings.expenseContainer;
+            }
+
+          // replace the place holder with some actual data
+            newHtml = html.replace('%id%', obj.id).replace('%description%', obj.description).replace('%value%', obj.value);
+
+          // insert html back into the dom
+
+          var DomContainer = document.querySelector(container);
+          DomContainer.insertAdjacentHTML('beforeend', newHtml);
+
       },
 
       getDOMstrings: function() {
@@ -89,7 +113,8 @@ var controller = (function(budgetCtrl, UICtrl) {
         var input, newItem;
 
         input = UICtrl.getinput();
-        newItem = budgetCtrl.addItem(input.type, input.description, input.value);       
+        newItem = budgetCtrl.addItem(input.type, input.description, input.value);  
+        UICtrl.addListItem(newItem, input.type);     
     };
 
     return {
