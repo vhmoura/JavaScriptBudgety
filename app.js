@@ -51,8 +51,8 @@ var budgeController = (function() {
 var UIController = (function() {
     var DOMstrings = {
           inputType: '.add__type',
-          addDescription: '.add__description',
-          addValue: '.add__value',
+          inputDescription: '.add__description',
+          inputValue: '.add__value',
           inputAddButton: '.add__btn',
           incomeContainer: '.income__list',
           expenseContainer: '.expenses__list'
@@ -62,8 +62,8 @@ var UIController = (function() {
       getinput: function() {
           return {
              type: document.querySelector(DOMstrings.inputType).value, // will be either inc or exp
-             description: document.querySelector(DOMstrings.addDescription).value,
-             value: document.querySelector(DOMstrings.addValue).value
+             description: document.querySelector(DOMstrings.inputDescription).value,
+             value: document.querySelector(DOMstrings.inputValue).value
             }
       },
 
@@ -87,6 +87,14 @@ var UIController = (function() {
           var DomContainer = document.querySelector(container);
           DomContainer.insertAdjacentHTML('beforeend', newHtml);
 
+      },
+
+      clearFields: function() {
+        var fields = document.querySelectorAll(DOMstrings.inputDescription+ ', ' + DOMstrings.inputValue);
+        var fieldsArray = Array.prototype.slice.call(fields);
+        fieldsArray.forEach(function(curr, index, array) {
+            curr.value = "";
+        });
       },
 
       getDOMstrings: function() {
@@ -114,7 +122,9 @@ var controller = (function(budgetCtrl, UICtrl) {
 
         input = UICtrl.getinput();
         newItem = budgetCtrl.addItem(input.type, input.description, input.value);  
-        UICtrl.addListItem(newItem, input.type);     
+        UICtrl.addListItem(newItem, input.type);  
+        
+        UICtrl.clearFields();
     };
 
     return {
