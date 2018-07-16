@@ -97,7 +97,8 @@ var UIController = (function() {
           budgetLabel: '.budget__value',
           incomeLabel: '.budget__income--value',
           expensesLabel: '.budget__expenses--value',
-          percentageLabel: '.budget__expenses--percentage'
+          percentageLabel: '.budget__expenses--percentage',
+          container: '.container'
     }
 
   return {
@@ -112,12 +113,12 @@ var UIController = (function() {
       addListItem: function(obj, type) {
           // create html string with placeholder text
           var html, newHtml, container;
-            html = '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+            html = '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
             container = DOMstrings.incomeContainer;
 
             if (type==='exp')
             {
-              html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+              html = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
               container = DOMstrings.expenseContainer;
             }
 
@@ -171,7 +172,9 @@ var controller = (function(budgetCtrl, UICtrl) {
             if (event.keyCode === 13 || event.which === 13) {
                 ctrlAddItem();
             }
-        });    
+        });
+        
+        document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
     };
 
     var updateBudget = function(){
@@ -202,6 +205,33 @@ var controller = (function(budgetCtrl, UICtrl) {
             updateBudget();    
         }
     };
+
+    var ctrlDeleteItem = function(event){
+        var elementId, splitId, type, ID;
+        console.log(event.target.parentNode);
+        elementId = findUpTag(event.target.parentNode, "inc-").id;
+        console.log(elementId);
+
+        if (elementId){
+            var elementId = findUpTag(event.target.parentNode, "exp-").id;
+        }
+
+        if (elementId){
+            splitId = elementId.split('-');
+            type = splitId[0];
+            ID = splitId[1];
+        }
+
+    };
+
+    function findUpTag(el, tag) {
+        while (el.parentNode) {
+            el = el.parentNode;
+            if (el.id.includes(tag))
+                return el;
+        }
+        return null;
+    }
 
     return {
         init: function() {
