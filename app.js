@@ -57,6 +57,16 @@ var budgeController = (function() {
         return newItem;
        },
 
+       deleteItem: function(type, id) {
+          var ids = data.allItems[type].map(function(cur) {
+               return cur.id;  
+          });
+          var index = ids.indexOf(id);
+          if (index !== -1)  {
+              data.allItems[type].splice(index, 1);
+          }
+       },
+
        calculateBudget: function() {
           // calculate total income and expenses
         calculateTotal('exp');
@@ -207,19 +217,22 @@ var controller = (function(budgetCtrl, UICtrl) {
     };
 
     var ctrlDeleteItem = function(event){
-        var elementId, splitId, type, ID;
+        var element, elementId, splitId, type, ID;
         console.log(event.target.parentNode);
-        elementId = findUpTag(event.target.parentNode, "inc-").id;
+        element = findUpTag(event.target.parentNode, "inc-");
         console.log(elementId);
 
-        if (elementId){
-            var elementId = findUpTag(event.target.parentNode, "exp-").id;
+        if (!element){
+            element = findUpTag(event.target.parentNode, "exp-");
         }
 
-        if (elementId){
+        if (element){
+            elementId = element.id;
             splitId = elementId.split('-');
             type = splitId[0];
-            ID = splitId[1];
+            ID = parseInt(splitId[1]);
+
+            budgetCtrl.deleteItem(type, ID);
         }
 
     };
@@ -227,8 +240,15 @@ var controller = (function(budgetCtrl, UICtrl) {
     function findUpTag(el, tag) {
         while (el.parentNode) {
             el = el.parentNode;
-            if (el.id.includes(tag))
-                return el;
+            if (el) 
+            {
+              if (el.id) {
+                  if (el.id.includes(tag))
+                  {
+                    return el;
+                  }
+              }
+            }
         }
         return null;
     }
